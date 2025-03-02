@@ -125,7 +125,8 @@ export default async function command() {
     preserveFormatInstructions += "\n4. Do not add any headers, footers, or wrapper text";
 
     if (avoidEmDashes) {
-      preserveFormatInstructions += "\n5. Do not use em dashes (—) in your rewrite. Use other punctuation like commas, parentheses, or colons instead";
+      preserveFormatInstructions +=
+        "\n5. Do not use em dashes (—) in your rewrite. Use other punctuation like commas, parentheses, or colons instead";
     }
 
     // Make API request to Claude
@@ -176,7 +177,9 @@ ${clipboardContent}${preserveFormatInstructions}`,
     // Auto-paste after generation if enabled
     if (autoPaste) {
       try {
-        await promisify(exec)("pbpaste | osascript -e 'tell application \"System Events\" to keystroke \"v\" using command down'");
+        await promisify(exec)(
+          'pbpaste | osascript -e \'tell application "System Events" to keystroke "v" using command down\'',
+        );
         await showHUD(`✅ Text rewritten and pasted using ${getModelDisplayName(selectedModel)}`);
       } catch (pasteError) {
         console.error("Error auto-pasting:", pasteError);
