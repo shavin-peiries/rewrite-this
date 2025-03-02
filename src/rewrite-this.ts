@@ -43,7 +43,7 @@ export default async function command() {
       "Rewrite this with correct spelling and grammar. Aim to have a conversational and human tone of voice.";
     const preserveLineBreaks = preferences.preserveLineBreaks !== false; // Default to true if undefined
     const avoidEmDashes = preferences.avoidEmDashes !== false; // Default to true if undefined
-    
+
     if (!apiKey) {
       await showToast({
         style: Toast.Style.Failure,
@@ -55,7 +55,7 @@ export default async function command() {
 
     // Check if this is the first time using the API key
     const hasUsedApiKey = await LocalStorage.getItem("has_used_claude_api_key");
-    
+
     if (!hasUsedApiKey) {
       // First time using the API key - show welcome message
       await LocalStorage.setItem("has_used_claude_api_key", "true");
