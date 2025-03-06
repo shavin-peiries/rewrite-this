@@ -18,6 +18,23 @@
       "mode": "no-view",
       "keywords": ["rewrite", "edit", "text", "claude", "ai", "writing", "improve", "polish", "grammar"],
       "key": "opt+r"
+    },
+    {
+      "name": "toggle-preset",
+      "title": "Toggle Rewrite Preset",
+      "subtitle": "Quickly switch between rewrite styles",
+      "description": "Toggle between different rewrite presets",
+      "mode": "no-view",
+      "keywords": ["toggle", "preset", "style", "rewrite", "switch"],
+      "key": "opt+tab"
+    },
+    {
+      "name": "manage-presets",
+      "title": "Manage Rewrite Presets",
+      "subtitle": "Add, edit, or delete rewrite styles",
+      "description": "Create, modify, or remove presets for rewriting text",
+      "mode": "view",
+      "keywords": ["manage", "preset", "style", "rewrite", "add", "edit", "delete"]
     }
   ],
   "preferences": [
@@ -49,44 +66,6 @@
           "value": "claude-3-5-sonnet-20240620"
         }
       ]
-    },
-    {
-      "name": "promptPreset",
-      "title": "Prompt Preset",
-      "description": "Choose a preset for how Claude should rewrite your text",
-      "type": "dropdown",
-      "required": false,
-      "default": "conversational",
-      "data": [
-        {
-          "title": "Conversational & Human",
-          "value": "conversational"
-        },
-        {
-          "title": "Formal & Professional",
-          "value": "formal"
-        },
-        {
-          "title": "Concise & Clear",
-          "value": "concise"
-        },
-        {
-          "title": "Fix Grammar Only",
-          "value": "grammar"
-        },
-        {
-          "title": "Custom",
-          "value": "custom"
-        }
-      ]
-    },
-    {
-      "name": "customPrompt",
-      "title": "Custom Prompt",
-      "description": "Your own custom prompt (only used when 'Custom' is selected above)",
-      "type": "textfield",
-      "required": false,
-      "default": "Rewrite this with correct spelling and grammar. Aim to have a conversational and human tone of voice."
     },
     {
       "name": "avoidEmDashes",
