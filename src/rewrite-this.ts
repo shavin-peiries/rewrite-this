@@ -9,7 +9,6 @@ interface Preferences {
   promptPreset?: string;
   customPrompt?: string;
   avoidEmDashes?: boolean;
-  autoPasteAfterGeneration?: boolean;
 }
 
 interface ClaudeContentBlock {
@@ -31,6 +30,32 @@ interface ClaudeAPIResponse {
   };
 }
 
+// Helper function to get selected text
+async function getSelectedText(): Promise<string | null> {
+  try {
+    // Save original clipboard content to restore later
+    const { stdout: originalClipboard } = await promisify(exec)("pbpaste");
+    
+    // Try to get selected text by simulating CMD+C
+    await promisify(exec)('osascript -e \'tell application "System Events" to keystroke "c" using {command down}\'');
+    
+    // Wait for the clipboard to update
+    await new Promise((resolve) => setTimeout(resolve, 300));
+    
+    // Get the updated clipboard content
+    const { stdout: newClipboard } = await promisify(exec)("pbpaste");
+    
+    // Restore original clipboard content
+    await Clipboard.copy(originalClipboard);
+    
+    // Return the clipboard content (selected text)
+    return newClipboard;
+  } catch (error) {
+    console.error("Error getting selected text:", error);
+    return null;
+  }
+}
+
 export default async function command() {
   try {
     // Get API key and other preferences
@@ -41,8 +66,7 @@ export default async function command() {
     const customPrompt =
       preferences.customPrompt ||
       "Rewrite this with correct spelling and grammar. Aim to have a conversational and human tone of voice.";
-    const avoidEmDashes = preferences.avoidEmDashes !== false; // Default to true if undefined
-    const autoPaste = preferences.autoPasteAfterGeneration === true;
+    const avoidEmDashes = preferences.avoidEmDashes ?? true;
 
     if (!apiKey) {
       await showToast({
@@ -59,18 +83,19 @@ export default async function command() {
     if (!hasUsedApiKey) {
       // First time using the API key - show welcome message
       await LocalStorage.setItem("has_used_claude_api_key", "true");
-      await showHUD("✅ You're ready to rewrite text with Claude! Copy text and run this command again.");
+      await showHUD("✅ You're ready to rewrite text with Claude! Select text and press Option+R.");
       return;
     }
 
-    // Get clipboard content
-    const { stdout: clipboardContent } = await promisify(exec)("pbpaste");
+    // Get selected text
+    const selectedText = await getSelectedText();
 
-    if (!clipboardContent || clipboardContent.trim() === "") {
+    // Check if text is selected
+    if (!selectedText || selectedText.trim() === "") {
       await showToast({
         style: Toast.Style.Failure,
-        title: "No text in clipboard",
-        message: "Please copy some text before running this command",
+        title: "No Text Selected",
+        message: "Please select some text before pressing Option+R",
       });
       return;
     }
@@ -82,7 +107,7 @@ export default async function command() {
       switch (promptPreset) {
         case "conversational":
           promptToUse =
-            "Rewrite this with correct spelling and grammar. Aim to have a conversational and human tone of voice.";
+            "Rewrite this with correct spelling and grammar. Aim to have a conversational and human tone of voice."; 
           break;
         case "formal":
           promptToUse =
@@ -102,32 +127,20 @@ export default async function command() {
     // Show loading indicator
     await showToast({
       style: Toast.Style.Animated,
-      title: "Rewriting text...",
+      title: "Rewriting selected text...",
       message: `Using ${getModelDisplayName(selectedModel)}`,
     });
 
-    // Prepare system message based on preferences
+    // Prepare system message with all formatting instructions
     let systemMessage =
-      "You are a helpful text rewriting assistant. Your job is to take the provided text and rewrite it as instructed while preserving the original line breaks, paragraph structure, and formatting";
+      "You are a helpful text rewriting assistant. Your job is to take the provided text and rewrite it as instructed while preserving the original line breaks, paragraph structure, emojis, and formatting";
 
     if (avoidEmDashes) {
-      systemMessage += ". Do not use em dashes (—) in your rewrite";
+      systemMessage +=
+        ". Do not use em dashes (—) in your rewrite. Use other punctuation like commas, parentheses, or colons instead";
     }
 
     systemMessage += ". You should return ONLY the rewritten text, with no additional commentary.";
-
-    // Prepare user instructions
-    let preserveFormatInstructions = "\n\nIMPORTANT INSTRUCTIONS:";
-    preserveFormatInstructions +=
-      "\n1. Return ONLY the rewritten text without any additional commentary or explanations";
-    preserveFormatInstructions += "\n2. Preserve all line breaks and paragraph structure from the original text";
-    preserveFormatInstructions += "\n3. Maintain the original formatting (including spacing between paragraphs)";
-    preserveFormatInstructions += "\n4. Do not add any headers, footers, or wrapper text";
-
-    if (avoidEmDashes) {
-      preserveFormatInstructions +=
-        "\n5. Do not use em dashes (—) in your rewrite. Use other punctuation like commas, parentheses, or colons instead";
-    }
 
     // Make API request to Claude
     const response = await fetch("https://api.anthropic.com/v1/messages", {
@@ -146,7 +159,7 @@ export default async function command() {
             role: "user",
             content: `${promptToUse} Here's the text to rewrite:
 
-${clipboardContent}${preserveFormatInstructions}`,
+${selectedText}`,
           },
         ],
       }),
@@ -161,34 +174,20 @@ ${clipboardContent}${preserveFormatInstructions}`,
 
     // Extract text from the Claude API response
     let rewrittenText = "No text returned from Claude";
-
-    if (data.content && data.content.length > 0) {
-      for (const block of data.content) {
-        if (block.type === "text") {
-          rewrittenText = block.text;
-          break;
-        }
-      }
+    if (data.content?.[0]?.type === "text") {
+      rewrittenText = data.content[0].text;
     }
 
-    // Copy rewritten text to clipboard
+    // Copy rewritten text to clipboard and paste it to replace the selected text
     await Clipboard.copy(rewrittenText);
 
-    // Auto-paste after generation if enabled
-    if (autoPaste) {
-      try {
-        await promisify(exec)(
-          'pbpaste | osascript -e \'tell application "System Events" to keystroke "v" using command down\'',
-        );
-        await showHUD(`✅ Text rewritten and pasted using ${getModelDisplayName(selectedModel)}`);
-      } catch (pasteError) {
-        console.error("Error auto-pasting:", pasteError);
-        // Fall back to just showing success for the rewrite if pasting fails
-        await showHUD(`✅ Text rewritten using ${getModelDisplayName(selectedModel)} (auto-paste failed)`);
-      }
-    } else {
-      // Show success message with model info (without auto-paste)
+    try {
+      // Paste back automatically to replace the selected text
+      await promisify(exec)('osascript -e \'tell application "System Events" to keystroke "v" using command down\'');
       await showHUD(`✅ Text rewritten using ${getModelDisplayName(selectedModel)}`);
+    } catch (pasteError) {
+      console.error("Error auto-pasting:", pasteError);
+      await showHUD(`✅ Text rewritten and copied to clipboard (press CMD+V to paste)`);
     }
   } catch (error) {
     console.error("Error:", error);
@@ -201,7 +200,11 @@ ${clipboardContent}${preserveFormatInstructions}`,
 }
 
 // Helper function to get a human-readable model name
-function getModelDisplayName(modelId: string): string {
+function getModelDisplayName(modelId: string | undefined): string {
+  if (!modelId) {
+    return "Claude 3.5 Sonnet v2"; // Default model display name
+  }
+
   switch (modelId) {
     case "claude-3-7-sonnet-20250219":
       return "Claude 3.7 Sonnet";
