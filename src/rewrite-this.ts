@@ -400,9 +400,16 @@ export default async function command() {
     const hasUsedApiKey = await LocalStorage.getItem("has_used_claude_api_key");
 
     if (!hasUsedApiKey) {
-      // First time using the API key - show welcome message
+      // First time using the API key - show welcome message with hotkey setup instructions
       await LocalStorage.setItem("has_used_claude_api_key", "true");
-      await showHUD("✅ You're ready to rewrite text with Claude! Select text and press Option+R.");
+      await showToast({
+        style: Toast.Style.Success,
+        title: "Claude API Key Set Successfully",
+        message: "To use this extension, set up a hotkey in Raycast preferences",
+      });
+
+      // Show more detailed HUD message
+      await showHUD("✅ API key set! Important: Set up a hotkey for the 'Rewrite This' command in Raycast preferences");
       return;
     }
 
@@ -414,7 +421,7 @@ export default async function command() {
       await showToast({
         style: Toast.Style.Failure,
         title: "No Text Selected",
-        message: "Please select some text before pressing Option+R",
+        message: "Please select some text before using the hotkey",
       });
       return;
     }

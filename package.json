@@ -2,22 +2,22 @@
   "$schema": "https://www.raycast.com/schemas/extension.json",
   "name": "rewrite-this",
   "title": "Rewrite This",
-  "description": "Select text, press Option+R, get instantly improved writing with Claude",
+  "description": "Get your text instantly rewritten by Claude",
   "icon": "extension-icon.png",
   "author": "shavin_peiries",
   "categories": [
     "Communication"
   ],
+  "keywords": ["rewrite", "edit", "text", "claude", "ai", "writing", "improve", "polish", "grammar"],
   "license": "MIT",
   "commands": [
     {
       "name": "rewrite-this",
       "title": "Rewrite This",
-      "subtitle": "Select text → Option+R → Instantly improved",
-      "description": "Select any text, press Option+R, and get it instantly rewritten by Claude",
+      "subtitle": "Select text → Hit hotkey → Get instantly improved text",
+      "description": "Get your text instantly rewritten by Claude",
       "mode": "no-view",
-      "keywords": ["rewrite", "edit", "text", "claude", "ai", "writing", "improve", "polish", "grammar"],
-      "key": "opt+r"
+      "keywords": ["rewrite", "edit", "text", "claude", "ai", "writing", "improve", "polish", "grammar"]
     },
     {
       "name": "toggle-preset",
@@ -25,8 +25,7 @@
       "subtitle": "Quickly switch between rewrite styles",
       "description": "Toggle between different rewrite presets",
       "mode": "no-view",
-      "keywords": ["toggle", "preset", "style", "rewrite", "switch"],
-      "key": "opt+tab"
+      "keywords": ["toggle", "preset", "style", "rewrite", "switch"]
     },
     {
       "name": "manage-presets",
@@ -34,7 +33,7 @@
       "subtitle": "Add, edit, or delete rewrite styles",
       "description": "Create, modify, or remove presets for rewriting text",
       "mode": "view",
-      "keywords": ["manage", "preset", "style", "rewrite", "add", "edit", "delete"]
+      "keywords": ["manage", "preset", "writing style", "style", "rewrite", "add", "edit", "delete"]
     }
   ],
   "preferences": [

@@ -5,12 +5,10 @@ A simple Raycast extension that instantly rewrites text using Anthropic's Claude
 ## One-Step Usage
 
 1. **Select text** in any application
-2. **Press Option+R**
+2. **Press Option+R** (after setting up this hotkey in Raycast)
 3. ✨ **Text is instantly rewritten** and replaced
 
-That's it! No switching between apps, no copying & pasting, no complex workflows.
-
-![Rewrite This in action](https://github.com/yourusername/rewrite-this/raw/main/media/demo.gif)
+That's it! No switching between apps, no copying & pasting into ChatGPT or other AI tools, no complex workflows.
 
 ## Why Use Rewrite This?
 
@@ -23,25 +21,30 @@ That's it! No switching between apps, no copying & pasting, no complex workflows
 
 ## Features
 
-- **Effortless Workflow**: Select text → Press Option+R → Get improved text
+- **Effortless Workflow**: Select text → Press your hotkey → Get improved text
 - **Premium AI Models**: Uses Claude 3.5 Sonnet v2 by default (Claude 3.7 Sonnet optional)
 - **Rewriting Presets**:
   - Conversational & Human (Default)
   - Formal & Professional
   - Concise & Clear
   - Grammar Fixes Only
-  - Custom prompt option
 - **Format Preservation**: Maintains original line breaks, paragraph structure, and formatting
 - **Style Options**: Avoid em dashes if preferred
 - **Instant Replacement**: Selected text is automatically replaced with improved version
+- **Custom Presets**: Create and manage your own rewriting styles
+- **Quick Preset Switching**: Toggle between different rewriting styles with a hotkey
 
-## Setup (Takes 30 Seconds)
+## Setup (Takes less than 60 seconds)
 
 1. Install the extension from Raycast Store
 2. Add your Claude API key in the extension preferences
    - Get a key from [Anthropic Console](https://console.anthropic.com/)
    - $5 of credits gets you 200+ rewrites (less than 3¢ per rewrite)
-3. Start using Option+R to instantly improve any text!
+3. Set up the keyboard shortcut in Raycast preferences:
+   - Open Raycast → Search Extensions → Rewrite This
+   - Set "Option+R" (or your preferred shortcut) for the "Rewrite This" command
+   - Optionally set shortcuts for "Toggle Rewrite Preset" (Option + Tab recommended) and "Manage Rewrite Presets"
+4. Start using your shortcut to instantly improve any text!
 
 ## Privacy & Security
 
@@ -58,9 +61,16 @@ You can customize your experience in the Raycast extension preferences:
 - Create your own custom rewriting prompt
 - Toggle em dash avoidance
 - Change the default keyboard shortcut
+- Add, edit, or delete custom rewriting presets
+
+## Commands
+
+- **Rewrite This**: The main command that rewrites your selected text
+- **Toggle Rewrite Preset**: Quickly switch between different rewriting styles
+- **Manage Rewrite Presets**: Add, edit, or delete custom rewriting styles
 
 ## Troubleshooting
 
-- **No text rewritten**: Make sure you've selected text before pressing Option+R
-- **Nothing happens**: Check that your Claude API key is correct
-- **API errors**: Ensure you have credits available in your Claude account
+- **No text rewritten**: Make sure you've selected text before pressing your shortcut
+- **Nothing happens**: Check that your Claude API key is correct and you've set up the hotkey correctly
+- **API errors**: Ensure you have credits available in your Claude account.
