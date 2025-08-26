@@ -50,19 +50,27 @@
       "description": "Select which Claude model to use (higher quality but slower models at the top)",
       "type": "dropdown",
       "required": false,
-      "default": "claude-3-5-sonnet-20241022",
+      "default": "claude-sonnet-4-20250514",
       "data": [
         {
-          "title": "Claude 3.7 Sonnet (Most intelligent)",
+          "title": "Claude Opus 4 (Most intelligent)",
+          "value": "claude-opus-4-20250514"
+        },
+        {
+          "title": "Claude Sonnet 4 (High quality)",
+          "value": "claude-sonnet-4-20250514"
+        },
+        {
+          "title": "Claude 3.7 Sonnet",
           "value": "claude-3-7-sonnet-20250219"
         },
         {
-          "title": "Claude 3.5 Sonnet v2 (High quality)",
+          "title": "Claude 3.5 Sonnet v2",
           "value": "claude-3-5-sonnet-20241022"
         },
         {
-          "title": "Claude 3.5 Sonnet (Balanced)",
-          "value": "claude-3-5-sonnet-20240620"
+          "title": "Claude 3.5 Haiku",
+          "value": "claude-3-5-haiku-20241022"
         }
       ]
     },

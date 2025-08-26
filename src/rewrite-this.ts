@@ -373,7 +373,7 @@ export default async function command() {
     // Get API key and other preferences
     const preferences = getPreferenceValues<Preferences>();
     const apiKey = preferences.claudeApiKey;
-    const selectedModel = preferences.claudeModel || "claude-3-5-sonnet-20241022";
+    const selectedModel = preferences.claudeModel || "claude-sonnet-4-20250514";
     const avoidEmDashes = preferences.avoidEmDashes ?? true;
 
     // Get all presets
@@ -507,16 +507,19 @@ ${selectedText}`,
 // Helper function to get a human-readable model name
 function getModelDisplayName(modelId: string | undefined): string {
   if (!modelId) {
-    return "Claude 3.5 Sonnet v2"; // Default model display name
+    return "Claude Sonnet 4"; // Default model display name
   }
-
   switch (modelId) {
+    case "claude-opus-4-20250514":
+      return "Claude Opus 4";
+    case "claude-sonnet-4-20250514":
+      return "Claude Sonnet 4";
     case "claude-3-7-sonnet-20250219":
       return "Claude 3.7 Sonnet";
     case "claude-3-5-sonnet-20241022":
       return "Claude 3.5 Sonnet v2";
-    case "claude-3-5-sonnet-20240620":
-      return "Claude 3.5 Sonnet";
+    case "claude-3-5-haiku-20241022":
+      return "Claude 3.5 Haiku";
     default:
       return modelId;
   }
